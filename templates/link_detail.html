@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Карточка ссылки | Shortener{% endblock %}
+{% block content %}
+    <div class="page-heading mb-4"><h1>Карточка ссылки</h1><p class="text-secondary mb-0">Адреса и сведения о сохранённой записи.</p></div>
+    {% if created %}<div class="alert alert-success mb-4" role="status">Ссылка успешно создана.</div>{% endif %}
+    <section class="card">
+        <div class="card-body p-4">
+            <h2 class="h4 mb-4 text-break">{{ link.title }}</h2>
+            <dl class="row mb-0 details">
+                <dt class="col-md-3">Название</dt><dd class="col-md-9">{{ link.title }}</dd>
+                <dt class="col-md-3">Исходный URL</dt><dd class="col-md-9"><a href="{{ link.original_url }}">{{ link.original_url }}</a></dd>
+                <dt class="col-md-3">Короткая ссылка</dt><dd class="col-md-9"><a href="{{ url_for('follow_link', code=link.short_code) }}">{{ url_for('follow_link', code=link.short_code, _external=True) }}</a></dd>
+                <dt class="col-md-3">Дата создания</dt><dd class="col-md-9">{{ link.created_at }}</dd>
+            </dl>
+            <div class="d-flex gap-3 flex-wrap border-top pt-4 mt-2"><a class="btn btn-primary" href="{{ url_for('link_list') }}">К списку ссылок</a><a class="btn btn-outline-secondary" href="{{ url_for('link_form') }}">Создать ещё</a></div>
+        </div>
+    </section>
+{% endblock %}

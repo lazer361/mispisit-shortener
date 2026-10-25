@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Shortener{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script defer src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+</head>
+<body>
+    <a class="visually-hidden-focusable skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bg-white border-bottom">
+        <nav class="navbar navbar-expand-lg py-3" aria-label="Основная навигация">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Shortener</a>
+                <span class="badge version-badge me-auto">{{ version }}</span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Открыть меню">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                    <div class="navbar-nav gap-lg-1 mt-3 mt-lg-0">
+                        {% for endpoint, label in [('index', 'Главная'), ('link_form', 'Создать ссылку'), ('link_list', 'Список ссылок'), ('access_denied', 'Пример отказа')] %}
+                        <a class="nav-link px-lg-3{% if request.endpoint == endpoint or (endpoint == 'link_list' and request.endpoint == 'link_detail') %} active{% endif %}" href="{{ url_for(endpoint) }}"{% if request.endpoint == endpoint %} aria-current="page"{% endif %}>{{ label }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container py-4 py-lg-5" id="main" tabindex="-1">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="container pb-4 small text-secondary">Shortener · Сервис коротких ссылок</footer>
+</body>
+</html>
