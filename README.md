@@ -6,18 +6,15 @@
 
 Создание ссылок, список, карточка и отказ из версии 0.0.2 сохранены. Данные перенесены в PostgreSQL 16. Таблица создаётся приложением автоматически, при первом запуске на новом томе список пуст. JSON и демо-записи не используются.
 
-## Адреса проекта
+## Запуск
 
 ```text
 Репозиторий: https://github.com/lazer361/mispisit-shortener
 Ветка: lab3
+Pull Request: https://github.com/lazer361/mispisit-shortener/pull/3
 Образ: lazer361/mispisit-shortener:0.0.3
 Страница образа: https://hub.docker.com/r/lazer361/mispisit-shortener
-```
 
-## Запуск
-
-```sh
 git clone -b lab3 https://github.com/lazer361/mispisit-shortener shortener
 cd shortener
 docker compose up -d
