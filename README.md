@@ -10,6 +10,7 @@ Shortener предназначен для создания коротких сс
 
 ```text
 Репозиторий: https://github.com/lazer361/mispisit-shortener
+Pull Request: https://github.com/lazer361/mispisit-shortener/pull/1
 Образ: https://hub.docker.com/r/lazer361/mispisit-shortener
 
 docker pull lazer361/mispisit-shortener:0.0.1
