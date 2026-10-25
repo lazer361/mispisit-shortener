@@ -6,18 +6,15 @@
 
 Оформлены пять страниц существующего сервиса: главная, форма, список, карточка и отказ. Интерфейс находится в приложении Flask и использует Jinja2 и Bootstrap 5.3.8. Функции и PostgreSQL 16 сохранены из третьей работы.
 
-## Адреса проекта
+## Запуск
 
 ```text
 Репозиторий: https://github.com/lazer361/mispisit-shortener
 Ветка: lab4
+Pull Request: https://github.com/lazer361/mispisit-shortener/pull/4
 Образ: lazer361/mispisit-shortener:0.0.4
 Страница образа: https://hub.docker.com/r/lazer361/mispisit-shortener
-```
 
-## Запуск
-
-```sh
 git clone -b lab4 https://github.com/lazer361/mispisit-shortener shortener
 cd shortener
 docker compose up -d
