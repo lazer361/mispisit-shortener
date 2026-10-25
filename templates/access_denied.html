@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Операция отклонена | Shortener{% endblock %}
+{% block content %}
+    <h1>Операция отклонена</h1>
+    <p>Пользователь без авторизации попытался {{ action }}.</p>
+    <p class="error" role="alert">{{ reason }}</p>
+    <p>Изменения не выполнены.</p>
+    <p class="actions"><a class="button" href="{{ url_for('link_form') }}">Вернуться к форме</a><a href="{{ url_for('link_list') }}">Список ссылок</a></p>
+{% endblock %}
