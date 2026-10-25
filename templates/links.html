@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Список ссылок | Shortener{% endblock %}
+{% block content %}
+    <h1>Список ссылок</h1>
+    <p><a class="button" href="{{ url_for('link_form') }}">Создать ссылку</a></p>
+    {% if links %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Название</th><th>Короткий адрес</th><th>Дата создания</th><th>Карточка</th></tr></thead>
+            <tbody>
+                {% for link in links %}
+                <tr>
+                    <td>{{ link.title }}</td>
+                    <td><a href="{{ url_for('follow_link', code=link.short_code) }}">/s/{{ link.short_code }}</a></td>
+                    <td>{{ link.created_at }}</td>
+                    <td><a href="{{ url_for('link_detail', record_id=link.id) }}">Открыть</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Ссылок пока нет. Создайте первую ссылку с помощью формы.</p>
+    {% endif %}
+{% endblock %}
