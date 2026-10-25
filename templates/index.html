@@ -1,33 +1,17 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shortener</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 48px 24px;
-            color: #222;
-            background: #fff;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-        }
-        main { max-width: 1050px; margin: 40px auto; }
-        h1 { margin: 0 0 16px; font-size: 32px; }
-        p { margin: 8px 0; font-size: 18px; }
-        @media (max-width: 600px) {
-            body { padding: 24px 18px; }
-            main { margin-top: 24px; }
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <h1>Shortener</h1>
-        <p>Создание коротких ссылок, QR-кодов и просмотр статистики для студентов и сотрудников.</p>
-        <p>Версия {{ version }}</p>
-        <p>Разработка продолжается</p>
-    </main>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Shortener{% endblock %}
+{% block content %}
+    <h1>Сервис коротких ссылок</h1>
+    <p>Создавайте короткие адреса для учебных материалов, документов и веб-страниц.</p>
+    <p>Введите исходный URL и при необходимости задайте своё короткое имя. Сохранённые ссылки доступны в общем списке.</p>
+    <p class="actions">
+        <a class="button" href="{{ url_for('link_form') }}">Создать ссылку</a>
+        <a href="{{ url_for('link_list') }}">Посмотреть список</a>
+    </p>
+    <h2>Порядок работы</h2>
+    <ol>
+        <li>Укажите адрес страницы с протоколом http:// или https://.</li>
+        <li>Получите короткую ссылку и откройте её карточку.</li>
+        <li>Перейдите по короткому адресу на исходную страницу.</li>
+    </ol>
+{% endblock %}

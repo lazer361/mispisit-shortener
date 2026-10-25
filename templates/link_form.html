@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Создание ссылки | Shortener{% endblock %}
+{% block content %}
+    <h1>Создание короткой ссылки</h1>
+    <form method="post" action="{{ url_for('link_form') }}">
+        <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
+        <label for="original_url">Исходный URL *</label>
+        <input id="original_url" name="original_url" type="text" inputmode="url" maxlength="2048" required
+               value="{{ form.get('original_url', '') }}" placeholder="https://ulstu.ru/">
+        <p class="hint">Полный адрес веб-страницы с http:// или https://.</p>
+        <label for="title">Название</label>
+        <input id="title" name="title" type="text" maxlength="100" value="{{ form.get('title', '') }}" placeholder="Например, учебные материалы">
+        <label for="alias">Короткое имя</label>
+        <input id="alias" name="alias" type="text" maxlength="32" value="{{ form.get('alias', '') }}" placeholder="Например, study">
+        <p class="hint">От 3 до 32 латинских букв, цифр, дефисов или знаков подчёркивания. Пустое поле означает автоматическую генерацию имени.</p>
+        <p class="actions"><button type="submit">Сохранить ссылку</button><a href="{{ url_for('link_list') }}">Отмена</a></p>
+    </form>
+{% endblock %}
