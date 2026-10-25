@@ -1,28 +1,36 @@
 # Shortener
 
-Учебный сервис сокращения ссылок. Лабораторные работы по дисциплине «Методы и средства проектирования информационных систем и технологий».
+Лабораторная работа №1 по дисциплине «Методы и средства проектирования информационных систем и технологий».
 
 Бездняков Александр, ИСТбд-42.
 
-## Версии проекта
+Shortener предназначен для создания коротких ссылок, получения QR-кодов и просмотра статистики переходов. В версии 0.0.1 реализована стартовая страница. Серверная часть использует Flask, страницы формируются шаблонизатором Jinja2.
 
-| Работа | Содержание | Ветка | Образ |
-|---|---|---|---|
-| 1 | Flask и стартовая страница | [lab1](https://github.com/lazer361/mispisit-shortener/tree/lab1) | `lazer361/mispisit-shortener:0.0.1` |
-| 2 | Создание ссылок, список, карточка и отказ | [lab2](https://github.com/lazer361/mispisit-shortener/tree/lab2) | `lazer361/mispisit-shortener:0.0.2` |
-| 3 | Постоянное хранение в PostgreSQL | [lab3](https://github.com/lazer361/mispisit-shortener/tree/lab3) | `lazer361/mispisit-shortener:0.0.3` |
-| 4 | Оформление интерфейса с Bootstrap | [lab4](https://github.com/lazer361/mispisit-shortener/tree/lab4) | `lazer361/mispisit-shortener:0.0.4` |
+## Запуск
 
-Код и инструкции запуска каждой работы находятся в соответствующей ветке. Изменения оформлены отдельными [Pull Request](https://github.com/lazer361/mispisit-shortener/pulls) в основную ветку. Ветка main содержит указатель версий.
+```text
+Репозиторий: https://github.com/lazer361/mispisit-shortener
+Pull Request: https://github.com/lazer361/mispisit-shortener/pull/1
+Образ: https://hub.docker.com/r/lazer361/mispisit-shortener
 
-Образы доступны в [Docker Hub](https://hub.docker.com/r/lazer361/mispisit-shortener) для `linux/amd64` и `linux/arm64`.
-
-## Запуск четвёртой версии
-
-```sh
-git clone -b lab4 https://github.com/lazer361/mispisit-shortener shortener
-cd shortener
-docker compose up -d
+docker pull lazer361/mispisit-shortener:0.0.1
+docker run --rm -p 8080:8080 lazer361/mispisit-shortener:0.0.1
 ```
 
-Открыть http://localhost:8080. Приложение и PostgreSQL запускаются из готовых образов. Данные хранятся в именованном томе `dbdata`. Инструкции предыдущих версий приведены в их ветках.
+Открыть http://localhost:8080.
+
+## Локальная сборка
+
+```sh
+docker build -t shortener:0.0.1 .
+docker run --rm -p 8080:8080 shortener:0.0.1
+```
+
+## Состав проекта
+
+- `app.py` - маршрут главной страницы.
+- `templates/index.html` - шаблон страницы.
+- `requirements.txt` - версии пакетов.
+- `Dockerfile` - описание сборки и запуска контейнера.
+
+Python 3.12.12, Flask 3.1.3, Gunicorn 23.0.0. Контейнер слушает порт 8080.
