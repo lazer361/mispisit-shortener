@@ -2,7 +2,7 @@ name: mispisit-bezdnyakov
 
 services:
   app:
-    image: lazer361/mispisit-shortener:0.0.3
+    image: lazer361/mispisit-shortener:0.0.4
     ports:
       - "8080:8080"
     environment:

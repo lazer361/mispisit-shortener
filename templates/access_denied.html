@@ -1,9 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Операция отклонена | Shortener{% endblock %}
+{% block title %}Отказ в выполнении действия | Shortener{% endblock %}
 {% block content %}
-    <h1>Операция отклонена</h1>
-    <p>Пользователь без авторизации попытался {{ action }}.</p>
-    <p class="error" role="alert">{{ reason }}</p>
-    <p>Изменения не выполнены.</p>
-    <p class="actions"><a class="button" href="{{ url_for('link_form') }}">Вернуться к форме</a><a href="{{ url_for('link_list') }}">Список ссылок</a></p>
+    <div class="page-heading mb-4"><h1>Отказ в выполнении действия</h1><p class="text-secondary mb-0">Не удалось {{ action }}.</p></div>
+    <section class="card">
+        <div class="card-body p-4">
+            <div class="alert alert-danger" role="alert"><h2 class="h6 alert-heading">Причина отказа</h2><p class="mb-0">{{ reason }}</p></div>
+            <p class="text-secondary mb-4">Пользователь: не авторизован. Изменения не выполнены.</p>
+            <div class="d-flex gap-3 flex-wrap"><a class="btn btn-primary" href="{{ url_for('link_form') }}">Вернуться к форме</a><a class="btn btn-outline-secondary" href="{{ url_for('link_list') }}">Список ссылок</a></div>
+        </div>
+    </section>
 {% endblock %}

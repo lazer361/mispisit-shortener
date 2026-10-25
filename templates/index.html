@@ -1,17 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Shortener{% endblock %}
+{% block title %}Главная | Shortener{% endblock %}
 {% block content %}
-    <h1>Сервис коротких ссылок</h1>
-    <p>Создавайте короткие адреса для учебных материалов, документов и веб-страниц.</p>
-    <p>Введите исходный URL и при необходимости задайте своё короткое имя. Сохранённые ссылки доступны в общем списке.</p>
-    <p class="actions">
-        <a class="button" href="{{ url_for('link_form') }}">Создать ссылку</a>
-        <a href="{{ url_for('link_list') }}">Посмотреть список</a>
-    </p>
-    <h2>Порядок работы</h2>
-    <ol>
-        <li>Укажите адрес страницы с протоколом http:// или https://.</li>
-        <li>Получите короткую ссылку и откройте её карточку.</li>
-        <li>Перейдите по короткому адресу на исходную страницу.</li>
-    </ol>
+    <section class="card mb-4">
+        <div class="card-body p-4 p-lg-5">
+            <p class="section-label mb-2">Короткие ссылки</p>
+            <h1 class="mb-3">Удобный адрес для длинной ссылки</h1>
+            <p class="text-secondary intro-text mb-4">Сохраните исходный URL, задайте короткое имя и получите ссылку, которой удобно делиться.</p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a class="btn btn-primary" href="{{ url_for('link_form') }}">Создать ссылку</a>
+                <a class="btn btn-outline-secondary" href="{{ url_for('link_list') }}">Список ссылок</a>
+            </div>
+        </div>
+    </section>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <section class="card h-100"><div class="card-body p-4">
+                <h2 class="h5">Создание ссылки</h2>
+                <p class="text-secondary mb-0">Укажите адрес с http:// или https://. Короткое имя можно придумать самостоятельно или оставить пустым.</p>
+            </div></section>
+        </div>
+        <div class="col-md-6">
+            <section class="card h-100"><div class="card-body p-4">
+                <h2 class="h5">Сохранённые ссылки</h2>
+                <p class="text-secondary mb-0">В общем списке доступны короткие адреса, даты создания и переход к карточке каждой ссылки.</p>
+            </div></section>
+        </div>
+    </div>
 {% endblock %}

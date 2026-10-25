@@ -34,7 +34,7 @@ def create_app(test_config=None):
 
     @app.context_processor
     def common_context():
-        return {"version": "0.0.3"}
+        return {"version": "0.0.4"}
 
     @app.get("/")
     def index():
