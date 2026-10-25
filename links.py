@@ -1,13 +1,13 @@
 import ipaddress
-import json
-import os
 import re
 import secrets
-import tempfile
-from datetime import datetime, timezone, timedelta
-from pathlib import Path
-from threading import RLock
+import time
+from datetime import timedelta, timezone
 from urllib.parse import urlsplit
+
+import psycopg
+from psycopg.errors import UniqueViolation
+from psycopg.rows import dict_row
 
 
 class LinkError(ValueError):
@@ -44,37 +44,63 @@ def valid_url(value):
 
 
 class LinkStore:
-    def __init__(self, filename):
-        self.filename = Path(filename)
-        self.lock = RLock()
-        self.filename.parent.mkdir(parents=True, exist_ok=True)
-        if not self.filename.exists():
-            self._write([])
+    def __init__(self, database_url):
+        self.database_url = database_url
+        for attempt in range(20):
+            try:
+                self._create_schema()
+                break
+            except psycopg.OperationalError:
+                if attempt == 19:
+                    raise
+                time.sleep(1)
 
-    def _read(self):
-        return json.loads(self.filename.read_text(encoding="utf-8"))
+    def _connect(self):
+        return psycopg.connect(self.database_url, row_factory=dict_row, connect_timeout=3)
 
-    def _write(self, records):
-        temporary = None
-        try:
-            with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=self.filename.parent,
-                                             delete=False) as file:
-                temporary = file.name
-                json.dump(records, file, ensure_ascii=False, indent=2)
-            os.replace(temporary, self.filename)
-        finally:
-            if temporary and os.path.exists(temporary):
-                os.unlink(temporary)
+    def _create_schema(self):
+        with self._connect() as connection:
+            connection.execute("""
+                CREATE TABLE IF NOT EXISTS links (
+                    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                    title VARCHAR(100) NOT NULL,
+                    original_url TEXT NOT NULL CHECK (char_length(original_url) BETWEEN 1 AND 2048),
+                    short_code VARCHAR(32) NOT NULL UNIQUE
+                        CHECK (short_code ~ '^[A-Za-z0-9_-]{3,32}$'),
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+    @staticmethod
+    def _record(row):
+        if row is not None:
+            row["created_at"] = row["created_at"].astimezone(
+                timezone(timedelta(hours=4))
+            ).strftime("%d.%m.%Y %H:%M")
+        return row
 
     def all(self):
-        with self.lock:
-            return sorted(self._read(), key=lambda item: item["id"], reverse=True)
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT id, title, original_url, short_code, created_at FROM links ORDER BY id DESC"
+            ).fetchall()
+        return [self._record(row) for row in rows]
 
     def find(self, record_id):
-        return next((item for item in self.all() if item["id"] == record_id), None)
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT id, title, original_url, short_code, created_at FROM links WHERE id = %s",
+                (record_id,),
+            ).fetchone()
+        return self._record(row)
 
     def by_code(self, code):
-        return next((item for item in self.all() if item["short_code"] == code), None)
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT id, title, original_url, short_code, created_at FROM links WHERE short_code = %s",
+                (code,),
+            ).fetchone()
+        return self._record(row)
 
     def create(self, original_url, title="", alias=""):
         original_url, title, alias = original_url.strip(), title.strip(), alias.strip()
@@ -84,21 +110,19 @@ class LinkStore:
             raise LinkError("invalid_title")
         if alias and not re.fullmatch(r"[A-Za-z0-9_-]{3,32}", alias):
             raise LinkError("invalid_alias")
-        with self.lock:
-            records = self._read()
-            used_codes = {item["short_code"] for item in records}
-            if alias in used_codes:
-                raise LinkError("alias_taken")
+        title = title or urlsplit(original_url).hostname[:100]
+        for _ in range(12):
             code = alias or secrets.token_urlsafe(5)
-            while code in used_codes:
-                code = secrets.token_urlsafe(5)
-            record = {
-                "id": max((item["id"] for item in records), default=0) + 1,
-                "title": title or urlsplit(original_url).hostname,
-                "original_url": original_url,
-                "short_code": code,
-                "created_at": datetime.now(timezone(timedelta(hours=4))).strftime("%d.%m.%Y %H:%M"),
-            }
-            records.append(record)
-            self._write(records)
-            return record
+            try:
+                with self._connect() as connection:
+                    row = connection.execute(
+                        """INSERT INTO links (title, original_url, short_code)
+                           VALUES (%s, %s, %s)
+                           RETURNING id, title, original_url, short_code, created_at""",
+                        (title, original_url, code),
+                    ).fetchone()
+                return self._record(row)
+            except UniqueViolation:
+                if alias:
+                    raise LinkError("alias_taken") from None
+        raise RuntimeError("Не удалось создать уникальное короткое имя")

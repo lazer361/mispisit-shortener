@@ -1,6 +1,5 @@
 import os
 import secrets
-from pathlib import Path
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
@@ -21,19 +20,21 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.config.update(
         SECRET_KEY=os.environ.get("SECRET_KEY") or secrets.token_hex(32),
-        LINKS_FILE=os.environ.get("LINKS_FILE", str(Path(__file__).parent / "data" / "links.json")),
+        DATABASE_URL=os.environ.get("DATABASE_URL"),
         MAX_CONTENT_LENGTH=16 * 1024,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
     )
     if test_config:
         app.config.update(test_config)
-    store = LinkStore(app.config["LINKS_FILE"])
+    if not app.config["DATABASE_URL"]:
+        raise RuntimeError("Не задана переменная окружения DATABASE_URL")
+    store = LinkStore(app.config["DATABASE_URL"])
     app.extensions["link_store"] = store
 
     @app.context_processor
     def common_context():
-        return {"version": "0.0.2"}
+        return {"version": "0.0.3"}
 
     @app.get("/")
     def index():
