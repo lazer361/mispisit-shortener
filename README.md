@@ -6,18 +6,13 @@
 
 В этой версии реализованы создание коротких ссылок, просмотр списка и карточки, отказ при ошибочных данных. Платформа: Python 3.12.12, Flask 3.1.3, Jinja2 3.1.6, Gunicorn 23.0.0. Данные временно хранятся в JSON в одном контейнере.
 
-## Адреса проекта
+## Запуск
 
 ```text
 Репозиторий: https://github.com/lazer361/mispisit-shortener
+Pull Request: https://github.com/lazer361/mispisit-shortener/pull/2
 Образ: https://hub.docker.com/r/lazer361/mispisit-shortener
-```
 
-Ветка работы: `lab2`.
-
-## Запуск
-
-```sh
 docker pull lazer361/mispisit-shortener:0.0.2
 docker run --rm -p 8080:8080 lazer361/mispisit-shortener:0.0.2
 ```
